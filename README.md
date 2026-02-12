@@ -28,7 +28,7 @@ A simple web application to estimate gold jewellery value based on weight, purit
 
 - HTML
 - CSS
-- JavaScript.
+- JavaScript 
 
 ## ▶️ Run
 
