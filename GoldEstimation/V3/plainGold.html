@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Gold Calculator</title>
+
+<style>
+
+body{
+background:#3b0066;
+color:white;
+font-family:Arial;
+padding:40px;
+margin:0;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+}
+
+h2{
+text-align:center;
+margin-bottom:30px;
+color:#ffd700;
+}
+
+/* MAIN CARD */
+.card{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:35px;
+background:#4a007a;
+padding:35px;
+border-radius:20px;
+border:1px solid #ffd70040;
+}
+
+/* INPUT GRID */
+.input-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:28px; /* spacing between grids */
+}
+
+.input-field{
+display:flex;
+flex-direction:column;
+}
+
+label{
+margin-bottom:6px;
+}
+
+/* INPUT STYLE */
+input,select{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:1px solid #ffffff30;
+background:#5a1a87;
+color:white;
+font-size:15px;
+outline:none;
+}
+
+/* dropdown styling */
+select{
+appearance:none;
+-webkit-appearance:none;
+-moz-appearance:none;
+}
+
+select option{
+background:#3b0066;
+color:white;
+}
+
+/* RESULT BOX */
+.result{
+background:#2a0044;
+padding:25px;
+border-radius:18px;
+}
+
+.result h3{
+color:#ffd700;
+text-align:center;
+margin-bottom:15px;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+margin:10px 0;
+}
+
+.total{
+color:#ffd700;
+font-size:22px;
+font-weight:bold;
+border-top:1px solid #ffd700;
+padding-top:10px;
+margin-top:10px;
+}
+
+/* MOBILE RESPONSIVE */
+@media(max-width:800px){
+.card{
+grid-template-columns:1fr;
+}
+.input-grid{
+grid-template-columns:1fr;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🪙 Gold Price Calculation</h2>
+
+<div class="card">
+
+<!-- LEFT SIDE INPUTS -->
+<div class="input-grid">
+
+<div class="input-field">
+<label>Weight (grams)</label>
+<input type="number" id="weight" value="10">
+</div>
+
+<div class="input-field">
+<label>Purity</label>
+<select id="purity">
+<option value="1">24K</option>
+<option value="0.916">22K</option>
+<option value="0.75">18K</option>
+<option value="0.585">14K</option>
+</select>
+</div>
+
+<div class="input-field">
+<label>Rate per gram (auto)</label>
+<input type="number" id="rate" readonly>
+</div>
+
+<div class="input-field">
+<label>Making Charges (%)</label>
+<input type="number" id="making" value="10">
+</div>
+
+<div class="input-field">
+<label>Other Charges (₹)</label>
+<input type="number" id="other" value="0">
+</div>
+
+</div>
+
+<!-- RIGHT RESULT PANEL -->
+<div class="result">
+
+<h3>Estimation Result</h3>
+
+<div class="row">
+<span>Base Price</span>
+<span id="basePrice">₹0</span>
+</div>
+
+<div class="row">
+<span>Making Charges</span>
+<span id="makingPrice">₹0</span>
+</div>
+
+<div class="row">
+<span>Other Charges</span>
+<span id="otherPrice">₹0</span>
+</div>
+
+<div class="row">
+<span>GST (3%)</span>
+<span id="gstPrice">₹0</span>
+</div>
+
+<div class="row total">
+<span>Total</span>
+<span id="totalPrice">₹0</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let rate24K = 0;
+
+// LIVE GOLD API
+async function fetchGoldRate(){
+
+try{
+
+const response = await fetch(
+"https://data-asg.goldprice.org/dbXRates/INR"
+);
+
+const data = await response.json();
+
+// ounce → gram conversion
+rate24K = data.items[0].xauPrice / 31.1035;
+
+updateRateByPurity();
+
+}catch(err){
+console.log("API error",err);
+}
+
+}
+
+function updateRateByPurity(){
+
+const purity = +document.getElementById("purity").value;
+
+const finalRate = rate24K * purity;
+
+document.getElementById("rate").value =
+finalRate.toFixed(2);
+
+calculateGold();
+
+}
+
+function calculateGold(){
+
+const weight = +document.getElementById("weight").value;
+const rate = +document.getElementById("rate").value;
+const making = +document.getElementById("making").value;
+const other = +document.getElementById("other").value;
+
+const base = weight * rate;
+const makingCharge = base * making/100;
+const gst = (base + makingCharge + other) * 0.03;
+const total = base + makingCharge + other + gst;
+
+document.getElementById("basePrice").innerText="₹"+base.toFixed(0);
+document.getElementById("makingPrice").innerText="₹"+makingCharge.toFixed(0);
+document.getElementById("otherPrice").innerText="₹"+other.toFixed(0);
+document.getElementById("gstPrice").innerText="₹"+gst.toFixed(0);
+document.getElementById("totalPrice").innerText="₹"+total.toFixed(0);
+
+}
+
+document.querySelectorAll("input")
+.forEach(el=>el.addEventListener("input",calculateGold));
+
+document.getElementById("purity")
+.addEventListener("change",updateRateByPurity);
+
+fetchGoldRate();
+
+</script>
+
+</body>
+</html>

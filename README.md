@@ -34,3 +34,6 @@ A simple web application to estimate gold jewellery value based on weight, purit
 
 Open `index.html` in your browser.
 
+
+
+V3 started
