@@ -73,8 +73,43 @@
       border: 1px solid rgba(255, 215, 0, 0.18);
       box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 30px;
+    }
+
+    .purity-section {
+      background: rgba(50, 20, 100, 0.35);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 28px;
+      border: 1.5px solid rgba(255, 215, 0, 0.25);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .rate-section {
+      background: rgba(50, 20, 100, 0.35);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 28px;
+      border: 1.5px solid rgba(255, 215, 0, 0.25);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #ffd700;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .inputs-section {
+      background: rgba(50, 20, 100, 0.35);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 24px;
+      border: 1.5px solid rgba(255, 215, 0, 0.25);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
     }
 
     .input-row {
@@ -130,6 +165,102 @@
       color: #ffd700;
     }
 
+    .purity-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .purity-cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 18px;
+      margin-bottom: 0;
+      align-items: stretch;
+    }
+
+    .purity-card {
+      padding: 22px 18px;
+      border-radius: 14px;
+      border: 2.5px solid rgba(255, 215, 0, 0.3);
+      background: rgba(255, 255, 255, 0.06);
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.28s ease;
+      text-align: center;
+      font-size: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 96px;
+    }
+
+    .purity-card small {
+      display: block;
+      font-size: 0.92rem;
+      margin-top: 8px;
+      opacity: 0.95;
+    }
+
+    .purity-card:hover {
+      border-color: rgba(255, 215, 0, 0.6);
+      background: rgba(255, 215, 0, 0.15);
+      transform: translateY(-3px);
+    }
+
+    .purity-card.active {
+      border-color: #ffd700;
+      background: rgba(255, 215, 0, 0.3);
+      color: #ffd700;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
+    .rate-label {
+      font-size: 1.3rem;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 14px;
+      color: #ffd700;
+    }
+
+    .rate-input-wrapper {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .big-rate {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #ffd700;
+      background: rgba(0, 0, 0, 0.12);
+      padding: 10px 16px;
+      border-radius: 12px;
+      min-width: 180px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .rate-input-field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .rate-input-field label {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .rate-input-field input {
+      padding: 14px 16px;
+      font-size: 1.1rem;
+    }
+
     @media (max-width: 768px) {
       .card {
         grid-template-columns: 1fr;
@@ -137,6 +268,20 @@
 
       .input-row {
         grid-template-columns: 1fr;
+      }
+
+      .purity-cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .rate-input-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .big-rate {
+        width: 100%;
+        text-align: center;
       }
     }
 
@@ -160,41 +305,62 @@
 
     <div class="card">
 
-      <!-- INPUTS -->
-      <div>
-        <div class="input-row">
-          <div class="input-field">
-            <label>Weight (grams)</label>
-            <input type="number" id="weight" value="10">
-          </div>
-
-          <div class="input-field">
-            <label>Purity</label>
-            <select id="purity">
-              <option value="0.916">22K (91.6%)</option>
-              <option value="0.75">18K (75%)</option>
-              <option value="0.585">14K (58.5%)</option>
-              <option value="1">24K (100%)</option>
-            </select>
-          </div>
+      <!-- PURITY SECTION -->
+      <div class="purity-section">
+        <div class="section-title">Select Purity</div>
+        <div class="purity-cards">
+          <div class="purity-card active" data-value="0.585">14K<br><small>(58.5%)</small></div>
+          <div class="purity-card" data-value="0.75">18K<br><small>(75%)</small></div>
+          <div class="purity-card" data-value="0.916">22K<br><small>(91.6%)</small></div>
+          <div class="purity-card" data-value="1">24K<br><small>(100%)</small></div>
         </div>
+        <input type="hidden" id="purity" value="0.916">
+        <!-- base 24K rate per gram (can be updated dynamically via API) -->
+        <input type="hidden" id="rate24k" value="14679.71">
+        <!-- optional API endpoint to fetch latest 24K rate (leave empty to skip) -->
+        <input type="hidden" id="rateApiUrl" value="">
+        <!-- optional API key (if your API requires it) -->
+        <input type="hidden" id="rateApiKey" value="">
+      </div>
 
-        <div class="input-row">
-          <div class="input-field">
-            <label>Rate per Gram (₹)</label>
-            <input type="number" id="rate" value="6000">
-          </div>
+      <!-- RATE PER GRAM SECTION -->
+      <div class="rate-section">
+        <div class="rate-label">💰 Rate per Gram (₹)</div>
+        <div class="rate-input-wrapper">
+          <div class="big-rate" id="rateDisplay">₹6000</div>
 
-          <div class="input-field">
-            <label>Making Charges (%)</label>
-            <input type="number" id="making" value="10">
+          <div style="display:flex;gap:14px;flex:1;align-items:center;">
+            <div class="rate-input-field" style="flex:1">
+              <label>Price per Gram (auto)</label>
+              <input type="number" id="rate" value="6000" readonly>
+            </div>
+
+            <div class="rate-input-field" style="width:160px;">
+              <label>Making Charges (%)</label>
+              <input type="number" id="making" value="10">
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- RESULT -->
+      <!-- INPUTS SECTION -->
+      <div class="inputs-section">
+        <div class="input-row">
+          <div class="input-field">
+            <label>⚖️ Weight (grams)</label>
+            <input type="number" id="weight" value="10">
+          </div>
+
+          <div class="input-field">
+            <label>⚡ Other Charges (₹)</label>
+            <input type="number" id="otherCharges" value="0">
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULT SECTION -->
       <div class="result">
-        <div class="result-header"> Estimation Result </div>
+        <div class="result-header">✨ Estimation Result</div>
 
         <div class="result-row">
           <span>🪙 Base Price</span>
@@ -207,12 +373,17 @@
         </div>
 
         <div class="result-row">
-          <span>🧾 GST (3%)</span>
+          <span>🧾 Other Charges</span>
+          <span id="otherPrice">₹0</span>
+        </div>
+
+        <div class="result-row">
+          <span>📊 GST (3%)</span>
           <span id="gstPrice">₹0</span>
         </div>
 
         <div class="total-row">
-          <span>Total</span>
+          <span>💎 Total</span>
           <span id="totalPrice">₹0</span>
         </div>
       </div>
@@ -226,23 +397,105 @@
       const weight = +document.getElementById("weight").value;
       const purity = +document.getElementById("purity").value;
       const rate = +document.getElementById("rate").value;
+      // keep the big rate display in sync
+      const rateDisplayEl = document.getElementById('rateDisplay');
+      if (rateDisplayEl) rateDisplayEl.innerText = "₹" + rate.toFixed(2);
       const making = +document.getElementById("making").value;
+      const otherCharges = +document.getElementById("otherCharges").value;
 
       const base = weight * rate * purity;
       const makingCharge = base * making / 100;
-      const gst = (base + makingCharge) * 0.03;
-      const total = base + makingCharge + gst;
+      const gst = (base + makingCharge + otherCharges) * 0.03;
+      const total = base + makingCharge + otherCharges + gst;
 
       document.getElementById("basePrice").innerText = "₹" + base.toFixed(0);
       document.getElementById("makingPrice").innerText = "₹" + makingCharge.toFixed(0);
+      document.getElementById("otherPrice").innerText = "₹" + otherCharges.toFixed(0);
       document.getElementById("gstPrice").innerText = "₹" + gst.toFixed(0);
       document.getElementById("totalPrice").innerText = "₹" + total.toFixed(0);
-    };
+    }
 
-    document.querySelectorAll("input, select")
+    // Handle purity card selection and auto-rate calculation
+    document.querySelectorAll('.purity-card').forEach(card => {
+      card.addEventListener('click', function() {
+        // Remove active class from all cards
+        document.querySelectorAll('.purity-card').forEach(c => c.classList.remove('active'));
+
+        // Add active class to clicked card
+        this.classList.add('active');
+
+        // Update hidden input value
+        const purityVal = this.dataset.value;
+        document.getElementById('purity').value = purityVal;
+
+        // Compute rate automatically from base 24K rate
+        const base24k = +document.getElementById('rate24k').value || 0;
+        const newRate = (base24k * (+purityVal));
+        const rateInput = document.getElementById('rate');
+        if (rateInput) {
+          rateInput.value = newRate.toFixed(2);
+          // keep big display in sync
+          const rateDisplayEl = document.getElementById('rateDisplay');
+          if (rateDisplayEl) rateDisplayEl.innerText = '₹' + newRate.toFixed(2);
+        }
+
+        // Recalculate
+        calculateGold();
+      });
+    });
+
+    // Add event listeners to all inputs
+    document.querySelectorAll("input")
       .forEach(el => el.addEventListener("input", calculateGold));
 
+    // Initial calculation
     calculateGold();
+
+    // Fetch and update 24K base rate from API (if configured)
+    async function fetch24kRate() {
+      const apiUrl = (document.getElementById('rateApiUrl') || {}).value || '';
+      const apiKey = (document.getElementById('rateApiKey') || {}).value || '';
+      if (!apiUrl) return; // no API configured
+
+      try {
+        const headers = apiKey ? { 'Authorization': apiKey } : undefined;
+        const res = await fetch(apiUrl, { headers });
+        if (!res.ok) throw new Error('Network response not ok ' + res.status);
+        const data = await res.json();
+
+        // Heuristic extraction of a numeric rate from common response shapes
+        let value = null;
+        if (typeof data === 'number') value = data;
+        else if (data && typeof data.price === 'number') value = data.price;
+        else if (data && typeof data.rate === 'number') value = data.rate;
+        else if (data && data.gold && typeof data.gold === 'number') value = data.gold;
+        else if (Array.isArray(data) && data.length && typeof data[0].price === 'number') value = data[0].price;
+
+        // If API returned price per troy oz, try to convert to per gram when obvious
+        // (1 troy oz = 31.1034768 grams). If value seems very large (>100000), assume it's per kg and divide.
+        if (value) {
+          // crude normalization: if value > 200000 assume per kg -> per gram
+          if (value > 200000) value = value / 1000;
+          // if value > 1500 and < 200000, likely per troy oz -> convert to per gram
+          if (value > 1500 && value < 200000) value = value / 31.1034768;
+
+          const normalized = +value.toFixed(2);
+          document.getElementById('rate24k').value = normalized;
+
+          // trigger rate recompute by re-clicking active purity card
+          const active = document.querySelector('.purity-card.active');
+          if (active) active.click();
+        } else {
+          console.warn('Could not parse rate from API response', data);
+        }
+      } catch (err) {
+        console.warn('Failed to fetch 24K rate:', err.message);
+      }
+    }
+
+    // Run once on load and then every 5 minutes
+    fetch24kRate();
+    setInterval(fetch24kRate, 5 * 60 * 1000);
   </script>
 
   <script src="./Js/v3/entryFile.js" type="module"></script>

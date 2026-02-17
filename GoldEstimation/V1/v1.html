@@ -72,8 +72,50 @@ body {
   border: 1px solid rgba(255,215,0,0.18);
   box-shadow: 0 18px 40px rgba(0,0,0,0.45);
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 30px;
+}
+
+.purity-section {
+  background: rgba(50,20,100,0.35);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 28px;
+  border: 1.5px solid rgba(255,215,0,0.25);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+}
+
+.rate-section {
+  background: rgba(50,20,100,0.35);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 28px;
+  border: 1.5px solid rgba(255,215,0,0.25);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+}
+
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffd700;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.inputs-section {
+  background: rgba(50,20,100,0.35);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 24px;
+  border: 1.5px solid rgba(255,215,0,0.25);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+}
+
+.result {
+  background: rgba(0,0,0,0.25);
+  border-radius: 18px;
+  padding: 22px;
+  border: 1px solid rgba(255,215,0,0.2);
 }
 
 .input-row {
@@ -127,11 +169,95 @@ input, select {
   color: #ffd700;
 }
 
+.purity-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.purity-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 0;
+}
+
+.purity-card {
+  padding: 20px 16px;
+  border-radius: 14px;
+  border: 2.5px solid rgba(255,215,0,0.3);
+  background: rgba(255,255,255,0.08);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.purity-card small {
+  display: block;
+  font-size: 0.85rem;
+  margin-top: 6px;
+  opacity: 0.9;
+}
+
+.purity-card:hover {
+  border-color: rgba(255,215,0,0.6);
+  background: rgba(255,215,0,0.15);
+  transform: translateY(-3px);
+}
+
+.purity-card.active {
+  border-color: #ffd700;
+  background: rgba(255,215,0,0.3);
+  color: #ffd700;
+  box-shadow: 0 0 20px rgba(255,215,0,0.5);
+}
+
+.rate-label {
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 14px;
+  color: #ffd700;
+}
+
+.rate-input-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.rate-input-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.rate-input-field label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.rate-input-field input {
+  padding: 14px 16px;
+  font-size: 1.1rem;
+}
+
 @media (max-width: 768px) {
   .card {
     grid-template-columns: 1fr;
   }
   .input-row {
+    grid-template-columns: 1fr;
+  }
+  .purity-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .rate-input-wrapper {
     grid-template-columns: 1fr;
   }
 }
@@ -153,41 +279,51 @@ input, select {
 
   <div class="card">
 
-    <!-- INPUTS -->
-    <div>
-      <div class="input-row">
-        <div class="input-field">
-          <label>Weight (grams)</label>
-          <input type="number" id="weight" value="10">
-        </div>
-
-        <div class="input-field">
-          <label>Purity</label>
-          <select id="purity">
-            <option value="0.916">22K (91.6%)</option>
-            <option value="0.75">18K (75%)</option>
-            <option value="0.585">14K (58.5%)</option>
-            <option value="1">24K (100%)</option>
-          </select>
-        </div>
+    <!-- PURITY SECTION -->
+    <div class="purity-section">
+      <div class="section-title">Select Purity</div>
+      <div class="purity-cards">
+        <div class="purity-card active" data-value="0.916">22K<br><small>(91.6%)</small></div>
+        <div class="purity-card" data-value="0.75">18K<br><small>(75%)</small></div>
+        <div class="purity-card" data-value="0.585">14K<br><small>(58.5%)</small></div>
+        <div class="purity-card" data-value="1">24K<br><small>(100%)</small></div>
       </div>
+      <input type="hidden" id="purity" value="0.916">
+    </div>
 
-      <div class="input-row">
-        <div class="input-field">
-          <label>Rate per Gram (₹)</label>
+    <!-- RATE PER GRAM SECTION -->
+    <div class="rate-section">
+      <div class="rate-label">💰 Rate per Gram (₹)</div>
+      <div class="rate-input-wrapper">
+        <div class="rate-input-field">
+          <label>Price per Gram</label>
           <input type="number" id="rate" value="6000">
         </div>
-
-        <div class="input-field">
+        <div class="rate-input-field">
           <label>Making Charges (%)</label>
           <input type="number" id="making" value="10">
         </div>
       </div>
     </div>
 
-    <!-- RESULT -->
+    <!-- INPUTS SECTION -->
+    <div class="inputs-section">
+      <div class="input-row">
+        <div class="input-field">
+          <label>⚖️ Weight (grams)</label>
+          <input type="number" id="weight" value="10">
+        </div>
+
+        <div class="input-field">
+          <label>⚡ Other Charges (₹)</label>
+          <input type="number" id="otherCharges" value="0">
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT SECTION -->
     <div class="result">
-      <div class="result-header"> Estimation Result </div>
+      <div class="result-header">✨ Estimation Result</div>
 
       <div class="result-row">
         <span>🪙 Base Price</span>
@@ -200,12 +336,17 @@ input, select {
       </div>
 
       <div class="result-row">
-        <span>🧾 GST (3%)</span>
+        <span>🧾 Other Charges</span>
+        <span id="otherPrice">₹0</span>
+      </div>
+
+      <div class="result-row">
+        <span>📊 GST (3%)</span>
         <span id="gstPrice">₹0</span>
       </div>
 
       <div class="total-row">
-        <span>Total</span>
+        <span>💎 Total</span>
         <span id="totalPrice">₹0</span>
       </div>
     </div>
@@ -220,21 +361,42 @@ function calculateGold() {
   const purity = +document.getElementById("purity").value;
   const rate = +document.getElementById("rate").value;
   const making = +document.getElementById("making").value;
+  const otherCharges = +document.getElementById("otherCharges").value;
 
   const base = weight * rate * purity;
   const makingCharge = base * making / 100;
-  const gst = (base + makingCharge) * 0.03;
-  const total = base + makingCharge + gst;
+  const gst = (base + makingCharge + otherCharges) * 0.03;
+  const total = base + makingCharge + otherCharges + gst;
 
   document.getElementById("basePrice").innerText = "₹" + base.toFixed(0);
   document.getElementById("makingPrice").innerText = "₹" + makingCharge.toFixed(0);
+  document.getElementById("otherPrice").innerText = "₹" + otherCharges.toFixed(0);
   document.getElementById("gstPrice").innerText = "₹" + gst.toFixed(0);
   document.getElementById("totalPrice").innerText = "₹" + total.toFixed(0);
 }
 
-document.querySelectorAll("input, select")
+// Handle purity card selection
+document.querySelectorAll('.purity-card').forEach(card => {
+  card.addEventListener('click', function() {
+    // Remove active class from all cards
+    document.querySelectorAll('.purity-card').forEach(c => c.classList.remove('active'));
+    
+    // Add active class to clicked card
+    this.classList.add('active');
+    
+    // Update hidden input value
+    document.getElementById('purity').value = this.dataset.value;
+    
+    // Recalculate
+    calculateGold();
+  });
+});
+
+// Add event listeners to all inputs
+document.querySelectorAll("input")
   .forEach(el => el.addEventListener("input", calculateGold));
 
+// Initial calculation
 calculateGold();
 </script>
 
