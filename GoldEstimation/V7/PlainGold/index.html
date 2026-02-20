@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gold Price Estimator</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2e0066, #4b0082, #6a0dad);
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 30px 16px;
+        }
+
+        .background-gradient {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.12), transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(255, 165, 0, 0.12), transparent 50%);
+            pointer-events: none;
+        }
+
+        .content {
+            max-width: 1100px;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .header {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .rate-display {
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.12), rgba(255, 165, 0, 0.08));
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.18);
+            color: #ffd700;
+            min-width: 200px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rate-display .rate-label {
+            display: block;
+            font-size: 1.15rem;
+            color: rgba(255, 215, 0, 0.98);
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        #rateBig {
+            display: block;
+            margin-top: 6px;
+            font-size: 2.4rem;
+            font-weight: 900;
+            color: #fff3c6;
+        }
+
+        .rings-image {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 5px solid #ffd700;
+            object-fit: cover;
+            margin-bottom: 14px;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #ffd700, #ffec8b, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            margin-top: 6px;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: rgba(30, 10, 70, 0.45);
+            backdrop-filter: blur(14px);
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid rgba(255, 215, 0, 0.18);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .input-field label {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .result {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 18px;
+            padding: 22px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .result-header {
+            text-align: center;
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+        }
+
+        .result-row,
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+        }
+
+        .total-row {
+            border-top: 2px solid rgba(255, 215, 0, 0.3);
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                grid-template-columns: 1fr;
+            }
+
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        select option {
+            background: #2e0066;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="background-gradient"></div>
+
+    <div class="content">
+
+        <div class="header">
+            <div>
+                <h1 class="title">🪙 Gold Price Calculation</h1>
+                <p class="subtitle">Instant gold value estimation (rate is live)</p>
+            </div>
+
+            <div class="rate-display" id="rateDisplay">
+                <span class="rate-label">RATE FOR GRAM</span>
+                <span id="rateBig">₹6000</span>
+            </div>
+        </div>
+
+        <div class="card">
+
+            <!-- INPUTS -->
+            <div>
+                <div class="input-row">
+                    <div class="input-field">
+                        <label>Weight (grams)</label>
+                        <input type="number" id="weight" value="10">
+                    </div>
+
+                    <div class="input-field">
+                        <label>Purity</label>
+                        <select id="purity">
+                            <option value="0.916">22K (91.6%)</option>
+                            <option value="0.75">18K (75%)</option>
+                            <option value="0.585">14K (58.5%)</option>
+                            <option value="1">24K (100%)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-field">
+                        <label>Rate per Gram (₹)</label>
+                        <input type="number" id="rate" value="6000" readonly>
+                    </div>
+
+                    <div class="input-field">
+                        <label>Making Charges (%)</label>
+                        <input type="number" id="making" value="10">
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESULT -->
+            <div class="result">
+                <div class="result-header"> Estimation Result </div>
+
+                <div class="result-row">
+                    <span>🪙 Base Price</span>
+                    <span id="basePrice">₹0</span>
+                </div>
+
+                <div class="result-row">
+                    <span>⚙️ Making Charges</span>
+                    <span id="makingPrice">₹0</span>
+                </div>
+
+                <div class="result-row">
+                    <span>🧾 GST (3%)</span>
+                    <span id="gstPrice">₹0</span>
+                </div>
+
+                <div class="total-row">
+                    <span>Total</span>
+                    <span id="totalPrice">₹0</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        (function () {
+            const weightEl = document.getElementById('weight');
+            const purityEl = document.getElementById('purity');
+            const rateEl = document.getElementById('rate');
+            const makingEl = document.getElementById('making');
+
+            const rateBigEl = document.getElementById('rateBig');
+            const basePriceEl = document.getElementById('basePrice');
+            const makingPriceEl = document.getElementById('makingPrice');
+            const gstPriceEl = document.getElementById('gstPrice');
+            const totalPriceEl = document.getElementById('totalPrice');
+
+            function parseNumber(value) {
+                if (typeof value === 'number') return value;
+                if (!value) return 0;
+                return parseFloat(String(value).replace(/[^0-9.-]+/g, '')) || 0;
+            }
+
+            function formatINR(value) {
+                return '₹' + (Number(value) || 0).toLocaleString('en-IN', {maximumFractionDigits:2});
+            }
+
+            // Determine initial base (24K) rate from the current rate input and current purity
+            let baseRate = (function initBaseRate() {
+                const currentRate = parseNumber(rateEl.value) || parseNumber(rateBigEl.textContent);
+                const currentPurity = parseNumber(purityEl.value) || 1;
+                if (currentPurity === 0) return currentRate;
+                return currentRate / currentPurity;
+            })();
+
+            // Fetch live base rate (24K) from the known endpoint and refresh periodically
+            async function fetchBaseRate() {
+                try {
+                    const url = 'https://bcast.svbcgold.in:7768/VOTSBroadcastStreaming/Services/xml/GetLiveRateByTemplateID/svbc';
+                    const resp = await fetch(url, { method: 'GET', redirect: 'follow' });
+                    const contentType = resp.headers.get('Content-Type') || '';
+
+                    if (resp.status !== 200) return;
+
+                    if (contentType.includes('text')) {
+                        const txt = await resp.text();
+                        const lines = txt.split('\n');
+                        // Try to mirror existing parsing from other versions
+                        if (lines.length > 8) {
+                            const cols = lines[8].split('\t');
+                            const candidate = cols[3] || cols[cols.length - 1];
+                            const parsed = parseNumber(candidate);
+                            if (parsed > 0) {
+                                baseRate = parsed;
+                                updateRateFromPurity();
+                                calculate();
+                                return;
+                            }
+                        }
+                        // fallback: extract first number from text
+                        const m = txt.match(/\d+(?:\.\d+)?/);
+                        if (m) {
+                            const parsed = parseNumber(m[0]);
+                            if (parsed > 0) {
+                                baseRate = parsed;
+                                updateRateFromPurity();
+                                calculate();
+                                return;
+                            }
+                        }
+                    } else {
+                        // try json
+                        const j = await resp.json();
+                        // try common keys or first number in JSON string
+                        if (j) {
+                            if (typeof j === 'object') {
+                                const vals = JSON.stringify(j).match(/\d+(?:\.\d+)?/g);
+                                if (vals && vals.length) {
+                                    const parsed = parseNumber(vals[0]);
+                                    if (parsed > 0) {
+                                        baseRate = parsed;
+                                        updateRateFromPurity();
+                                        calculate();
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (error) {
+                    // silent fail — network/CORS may block from file:// preview
+                    console.warn('fetchBaseRate error', error);
+                }
+            }
+
+            // Refresh every 30s
+            fetchBaseRate();
+            setInterval(fetchBaseRate, 30000);
+
+            function updateRateDisplay(rate) {
+                rateEl.value = Number(rate).toFixed(2);
+                rateBigEl.textContent = formatINR(rate);
+            }
+
+            function updateRateFromPurity() {
+                const purity = parseNumber(purityEl.value) || 1;
+                const newRate = baseRate * purity;
+                updateRateDisplay(newRate);
+            }
+
+            function calculate() {
+                const weight = parseNumber(weightEl.value);
+                const ratePerGram = parseNumber(rateEl.value);
+                const makingPercent = parseNumber(makingEl.value);
+
+                const basePrice = weight * ratePerGram;
+                const makingPrice = basePrice * (makingPercent / 100);
+                const gstPrice = (basePrice + makingPrice) * 0.03; // 3% GST
+                const total = basePrice + makingPrice + gstPrice;
+
+                basePriceEl.textContent = formatINR(basePrice);
+                makingPriceEl.textContent = formatINR(makingPrice);
+                gstPriceEl.textContent = formatINR(gstPrice);
+                totalPriceEl.textContent = formatINR(total);
+            }
+
+            // Event listeners
+            purityEl.addEventListener('change', function () {
+                updateRateFromPurity();
+                calculate();
+            });
+
+            // rate input is auto-updated from baseRate * purity; manual edit disabled
+
+            weightEl.addEventListener('input', calculate);
+            makingEl.addEventListener('input', calculate);
+
+            // initialize UI
+            updateRateFromPurity();
+            calculate();
+        })();
+    </script>
+
+</body>
+
+</html>

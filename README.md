@@ -43,3 +43,5 @@ V4 started
 V5 js removed, need to work on gold big
 
 V6 started for big gold rate
+
+V7 code is written in modular
